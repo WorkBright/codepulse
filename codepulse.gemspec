@@ -11,6 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary = "GitHub PR metrics TUI app"
   spec.description = "Terminal tool to analyze GitHub pull request pickup times, merge times, and sizes using the gh CLI."
   spec.homepage = "https://github.com/WorkBright/codepulse"
+  spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0"
 
   spec.metadata["rubygems_mfa_required"] = "true"
@@ -20,7 +21,8 @@ Gem::Specification.new do |spec|
   spec.files = Dir.glob([
                           "lib/**/*.rb",
                           "bin/*",
-                          "README.md"
+                          "README.md",
+                          "LICENSE"
                         ])
 
   spec.bindir = "bin"
