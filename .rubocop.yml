@@ -1,0 +1,53 @@
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.0
+  CacheRootDirectory: tmp/rubocop_cache
+  Exclude:
+    - "vendor/**/*"
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+Style/Documentation:
+  Enabled: false
+
+Style/StderrPuts:
+  Enabled: false
+
+Naming/RescuedExceptionsVariableName:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Metrics/ClassLength:
+  Max: 200
+
+Metrics/MethodLength:
+  Max: 40
+
+Metrics/AbcSize:
+  Max: 40
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Metrics/BlockLength:
+  Exclude:
+    - "lib/codepulse/cli.rb"
+
+Layout/LineLength:
+  Max: 140
+
+Style/SoleNestedConditional:
+  Enabled: false
+
+Gemspec/DevelopmentDependencies:
+  Enabled: false
+

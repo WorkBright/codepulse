@@ -1,0 +1,5 @@
+# Gem build artifacts
+*.gem
+
+# RuboCop cache
+tmp/
