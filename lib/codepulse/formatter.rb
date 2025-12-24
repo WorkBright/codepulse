@@ -4,6 +4,7 @@ module Codepulse
   class Formatter
     REPORT_WIDTH = 86
     TITLE_LIMIT = 50
+    MIN_FOR_P95 = 50
 
     def output(metrics, repo:, detailed: true, business_days: nil)
       if metrics.empty?
@@ -28,8 +29,17 @@ module Codepulse
     def output_report(metrics, excluded:, repo:, business_days:, detailed:)
       print_report_header(repo, business_days)
       puts
+      print_definitions
+      puts
       print_summary(metrics, excluded_count: excluded.count)
       print_details(metrics, excluded: excluded) if detailed
+    end
+
+    def print_definitions
+      puts "  Pickup time:    Time from PR creation to first reviewer response (business days, excl. US holidays)"
+      puts "  Time to merge:  Time from PR creation to merge (business days, excl. US holidays)"
+      puts "  PR size:        Net lines changed (additions - deletions)"
+      puts "  Files changed:  Number of files modified in the PR"
     end
 
     def print_summary(metrics, excluded_count:)
@@ -173,7 +183,7 @@ module Codepulse
 
       puts "  Average #{label.downcase}:  #{format_duration_compact(average_seconds)}"
       puts "  Median #{label.downcase}:   #{format_duration_compact(percentile_value(sorted, 50))}"
-      puts "  p95 #{label.downcase}:      #{format_duration_compact(percentile_value(sorted, 95))}"
+      puts "  p95 #{label.downcase}:      #{format_duration_compact(percentile_value(sorted, 95))}" if values.length >= MIN_FOR_P95
       puts "  Fastest #{label.downcase}: #{format_duration_compact(sorted.first)}"
       puts "  Slowest #{label.downcase}: #{format_duration_compact(sorted.last)}"
     end
@@ -186,7 +196,7 @@ module Codepulse
 
       puts "  Average #{label.downcase}:  #{format_number_compact(average_value)}"
       puts "  Median #{label.downcase}:   #{format_number_compact(percentile_value(sorted, 50))}"
-      puts "  p95 #{label.downcase}:      #{format_number_compact(percentile_value(sorted, 95))}"
+      puts "  p95 #{label.downcase}:      #{format_number_compact(percentile_value(sorted, 95))}" if values.length >= MIN_FOR_P95
       puts "  Min #{label.downcase}:      #{format_number_compact(sorted.first)}"
       puts "  Max #{label.downcase}:      #{format_number_compact(sorted.last)}"
     end
@@ -195,6 +205,12 @@ module Codepulse
       return value if value.length <= length
 
       "#{value[0, length - 1]}…"
+    end
+
+    def size_string(net_lines)
+      return "0" if net_lines.zero?
+
+      net_lines.positive? ? "+#{net_lines}" : net_lines.to_s
     end
 
     def format_duration_compact(seconds)
