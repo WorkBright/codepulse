@@ -33,7 +33,7 @@ module Codepulse
       puts
       print_definitions
       puts
-      print_summary(metrics, excluded_count: excluded.count)
+      print_summary(metrics, excluded: excluded)
       print_details(metrics, excluded: excluded) if detailed
     end
 
@@ -44,8 +44,12 @@ module Codepulse
       puts "  Files changed:  Number of files modified in the PR"
     end
 
-    def print_summary(metrics, excluded_count:)
-      print_section_title("SUMMARY (#{metrics.count} PRs with pickup, #{excluded_count} pending)")
+    def print_summary(metrics, excluded:)
+      open_count = excluded.count { |m| m[:merged_at].nil? }
+      merged_count = excluded.count - open_count
+
+      excluded_text = build_excluded_text(open_count, merged_count)
+      print_section_title("SUMMARY (#{metrics.count} PRs with pickup#{excluded_text})")
       puts
 
       print_duration_stats("Pickup time", metrics.map { |m| m[:pickup_time_seconds] })
@@ -111,6 +115,16 @@ module Codepulse
 
     def format_date(time_value)
       time_value.strftime("%b %-d")
+    end
+
+    def build_excluded_text(open_count, merged_count)
+      parts = []
+      parts << "#{open_count} awaiting pickup" if open_count.positive?
+      parts << "#{merged_count} merged without pickup" if merged_count.positive?
+
+      return "" if parts.empty?
+
+      ", #{parts.join(", ")}"
     end
 
     def print_section_title(title)
