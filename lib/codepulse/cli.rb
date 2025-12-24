@@ -9,7 +9,7 @@ module Codepulse
     include TimeHelpers
 
     DEFAULT_STATE = "all"
-    DEFAULT_BUSINESS_DAYS = 14
+    DEFAULT_BUSINESS_DAYS = 7
     PRS_PER_BUSINESS_DAY = 5
     MAX_AUTO_LIMIT = 200
 

@@ -36,7 +36,7 @@ codepulse owner/repo
 |--------|-------------|---------|
 | `-s`, `--state STATE` | `open`, `closed`, or `all` | `all` |
 | `-l`, `--limit COUNT` | Max PRs to fetch | auto (5 × business-days) |
-| `--business-days DAYS` | PRs from last N business days | `14` |
+| `--business-days DAYS` | PRs from last N business days | `7` |
 | `--details` | Show individual PR table (sorted by slowest pickup) | off |
 | `--gh-command PATH` | Custom `gh` executable path | `gh` |
 
