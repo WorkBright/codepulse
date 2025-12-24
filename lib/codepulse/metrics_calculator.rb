@@ -25,7 +25,7 @@ module Codepulse
       merged_at = parse_time(pull_request["merged_at"])
       pickup_event = find_pickup_event(repository, pull_request, created_at)
       pickup_seconds = pickup_event ? business_seconds_between(created_at, pickup_event.fetch(:timestamp)) : nil
-      merge_seconds = merged_at && created_at ? (merged_at - created_at).to_i : nil
+      merge_seconds = merged_at && created_at ? business_seconds_between(created_at, merged_at) : nil
 
       {
         number: pull_request["number"],
