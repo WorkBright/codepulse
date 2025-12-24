@@ -4,9 +4,11 @@ require "json"
 require "uri"
 
 module Codepulse
+  # Shared GitHub API client logic for fetching PRs, reviews, and comments.
   module BaseClient
     REPO_FORMAT = %r{\A[^/]+/[^/]+\z}
 
+    # Fetches pull requests with pagination, then fetches full details for each.
     def pull_requests(repository, state:, limit:)
       ensure_repository_format(repository)
       per_page = [limit, 100].min

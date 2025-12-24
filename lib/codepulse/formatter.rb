@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 module Codepulse
+  # Formats and outputs PR metrics as a terminal report.
   class Formatter
     REPORT_WIDTH = 86
     TITLE_LIMIT = 50
-    MIN_FOR_P95 = 50
+    MIN_FOR_P95 = 50 # Minimum data points to show p95
 
+    # Main entry point: outputs metrics as a formatted report.
     def output(metrics, repo:, detailed: true, business_days: nil)
       if metrics.empty?
         puts "No pull requests found for #{repo}."
@@ -248,6 +250,8 @@ module Codepulse
       "#{days.round}d ago"
     end
 
+    # Returns the value at the given percentile from a sorted array.
+    # Uses nearest-rank method: p50 = median, p95 = 95th percentile.
     def percentile_value(sorted_values, percentile)
       count = sorted_values.length
       rank = (percentile / 100.0 * count).ceil

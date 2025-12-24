@@ -3,15 +3,18 @@
 require "time"
 
 module Codepulse
+  # Time calculation helpers for business days and holidays.
   module TimeHelpers
     SECONDS_PER_DAY = 86_400
 
+    # Parses a time string, returns nil if invalid.
     def parse_time(value)
       Time.parse(value.to_s)
     rescue ArgumentError
       nil
     end
 
+    # Returns true if the time falls on a weekday and is not a US holiday.
     def business_day?(time_value)
       return false unless weekday?(time_value)
       return false if us_holiday?(time_value)
@@ -19,10 +22,12 @@ module Codepulse
       true
     end
 
+    # Returns true for Monday through Friday.
     def weekday?(time_value)
       time_value.wday.between?(1, 5)
     end
 
+    # Returns true if the date is a US federal holiday.
     def us_holiday?(time_value)
       us_holidays(time_value.year).include?(date_key(time_value))
     end
@@ -75,6 +80,8 @@ module Codepulse
       holidays
     end
 
+    # Finds the nth occurrence of a weekday in a month (e.g., 3rd Monday).
+    # target_wday: 0=Sun, 1=Mon, ..., 6=Sat
     def nth_weekday(year, month, target_wday, occurrence)
       first_day = Time.new(year, month, 1)
       days_until = (target_wday - first_day.wday + 7) % 7
@@ -82,6 +89,7 @@ module Codepulse
       [year, month, day]
     end
 
+    # Finds the last occurrence of a weekday in a month (e.g., last Monday of May).
     def last_weekday(year, month, target_wday)
       next_month = month == 12 ? Time.new(year + 1, 1, 1) : Time.new(year, month + 1, 1)
       last_day = next_month - SECONDS_PER_DAY
@@ -97,6 +105,8 @@ module Codepulse
       Time.new(time_value.year, time_value.month, time_value.day, 23, 59, 59, time_value.utc_offset)
     end
 
+    # Calculates seconds between two times, counting only business day hours.
+    # Skips weekends and US holidays entirely.
     def business_seconds_between(start_time, end_time)
       return nil unless start_time && end_time
       return 0 if end_time <= start_time
@@ -116,6 +126,7 @@ module Codepulse
       total.to_i
     end
 
+    # Returns the cutoff time for N business days ago.
     def business_days_cutoff(business_days)
       return nil unless business_days
 

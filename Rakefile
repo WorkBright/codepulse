@@ -9,4 +9,3 @@ Rake::TestTask.new(:test) do |task|
 end
 
 task default: :test
-

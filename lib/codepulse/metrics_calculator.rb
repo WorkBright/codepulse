@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 module Codepulse
+  # Calculates pickup time, merge time, and size metrics for pull requests.
   class MetricsCalculator
     include TimeHelpers
 
+    # Bot accounts to ignore when calculating pickup time.
     IGNORED_ACTORS = [
       "copilot-pull-request-reviewer",
       "copilot-pull-request-reviewer[bot]",
@@ -20,6 +22,7 @@ module Codepulse
       @client = client
     end
 
+    # Returns a hash of metrics for a single PR.
     def metrics_for_pull_request(repository, pull_request)
       created_at = parse_time(pull_request["created_at"])
       merged_at = parse_time(pull_request["merged_at"])
@@ -46,6 +49,7 @@ module Codepulse
 
     private
 
+    # Finds the first non-author, non-bot response (review, comment, or issue comment).
     def find_pickup_event(repository, pull_request, created_at)
       pull_number = pull_request["number"]
       author_login = pull_request.dig("user", "login")
