@@ -99,6 +99,9 @@ codepulse rails/rails --business-days 30 --limit 50
 ## Development
 
 ```sh
+# Run tests
+rake test
+
 # Lint (requires: gem install rubocop)
 rubocop
 

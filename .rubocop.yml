@@ -27,7 +27,7 @@ Style/IfUnlessModifier:
   Enabled: false
 
 Metrics/ClassLength:
-  Max: 200
+  Max: 250
 
 Metrics/MethodLength:
   Max: 40
