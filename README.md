@@ -6,16 +6,23 @@ Terminal tool to analyze GitHub pull request pickup times, merge times, and size
 
 ### Prerequisites
 
-1. Ruby 3.0+
-2. Install GitHub CLI: https://cli.github.com
-3. Authenticate:
+1. **Ruby 3.0+**
+2. **GitHub CLI** — [Install](https://cli.github.com) and authenticate:
    ```sh
    gh auth login
    ```
 
-### Install the gem
+### Install from RubyGems
 
 ```sh
+gem install codepulse
+```
+
+### Install from source
+
+```sh
+git clone https://github.com/WorkBright/codepulse.git
+cd codepulse
 gem build codepulse.gemspec
 gem install codepulse-0.1.0.gem
 ```
@@ -43,7 +50,7 @@ codepulse owner/repo
 ### Examples
 
 ```sh
-# Summary for current repo (last 14 business days)
+# Summary for current repo (last 7 business days)
 codepulse
 
 # Summary for specific repo
@@ -60,41 +67,40 @@ codepulse rails/rails --business-days 30 --limit 50
 
 ```
 ======================================================================================
-  PR PICKUP TIME REPORT | Last 14 business days (Dec 4 - Dec 24)
+  PR PICKUP TIME REPORT | Last 7 business days (Dec 16 - Dec 24)
   rails/rails
 ======================================================================================
 
+  Pickup time:    Time from PR creation to first reviewer response (business days)
+  Time to merge:  Time from PR creation to merge (business days)
+  PR size:        Net lines changed (additions - deletions)
+  Files changed:  Number of files modified in the PR
+
 --------------------------------------------------------------------------------------
-  SUMMARY (18 PRs with pickup, 5 pending)
+  SUMMARY (18 PRs with pickup, 3 awaiting pickup, 2 merged without pickup)
 --------------------------------------------------------------------------------------
 
   Average pickup time:  4h 23m
   Median pickup time:   2h 15m
-  p95 pickup time:      1d 8h
   Fastest pickup time:  8m
   Slowest pickup time:  2d 5h
-
-  Average time to merge:  1d 2h
-  Median time to merge:   18h 30m
-  p95 time to merge:      3d 4h
-  Fastest time to merge:  45m
-  Slowest time to merge:  5d 12h
 
   ...
 ```
 
 ## What is calculated
 
-- **Pickup time**: Time from PR creation to first non-author response (business days only, Mon–Fri)
-- **Time to merge**: Time from PR creation to merge
+- **Pickup time**: Time from PR creation to first non-author response (business days, excludes US holidays)
+- **Time to merge**: Time from PR creation to merge (business days, excludes US holidays)
 - **PR size**: Net lines (additions − deletions) and files changed
-- **Stats**: Average, median, p95, fastest, slowest
+- **Stats**: Average, median, p95 (when 50+ PRs), fastest, slowest
 
 ## Filters
 
-- **Default 14 business days**: Only analyzes recent PRs
+- **Default 7 business days**: Only analyzes recent PRs
 - **Closed unmerged PRs excluded**: Abandoned PRs are filtered out
 - **Bots ignored**: Copilot, GitHub Actions, and other bot reviewers don't count as pickup
+- **US holidays excluded**: Federal holidays are not counted as business days
 
 ## Development
 
@@ -105,7 +111,11 @@ rake test
 # Lint (requires: gem install rubocop)
 rubocop
 
-# Rebuild and install
+# Build and install locally
 gem build codepulse.gemspec
 gem install codepulse-0.1.0.gem
 ```
+
+## License
+
+MIT
