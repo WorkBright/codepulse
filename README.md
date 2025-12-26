@@ -67,7 +67,7 @@ codepulse rails/rails --business-days 30 --limit 50
 
 ```
 ======================================================================================
-  PR PICKUP TIME REPORT | Last 7 business days (Dec 16 - Dec 24)
+  Codepulse PR Metrics Report | Last 7 business days (Dec 16 - Dec 24)
   rails/rails
 ======================================================================================
 

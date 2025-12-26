@@ -93,7 +93,7 @@ module Codepulse
     def print_report_header(repo, business_days)
       time_period = build_time_period(business_days)
       puts "=" * REPORT_WIDTH
-      puts "  PR PICKUP TIME REPORT | #{time_period}"
+      puts "  Codepulse PR Metrics Report | #{time_period}"
       puts "  #{repo}"
       puts "=" * REPORT_WIDTH
     end

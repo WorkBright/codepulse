@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["Patrick Navarro"]
   spec.email = ["patrick@workbright.com"]
 
-  spec.summary = "GitHub PR metrics TUI app"
+  spec.summary = "GitHub PR metrics CLI tool"
   spec.description = "Terminal tool to analyze GitHub pull request pickup times, merge times, and sizes using the gh CLI."
   spec.homepage = "https://github.com/WorkBright/codepulse"
   spec.license = "MIT"
