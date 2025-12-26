@@ -10,7 +10,7 @@ module Codepulse
     # Main entry point: outputs metrics as a formatted report.
     def output(metrics, repo:, detailed: true, business_days: nil)
       if metrics.empty?
-        puts "No pull requests found for #{repo}."
+        print_no_pull_requests_message(repo, business_days)
         return
       end
 
@@ -27,6 +27,15 @@ module Codepulse
     end
 
     private
+
+    def print_no_pull_requests_message(repo, business_days)
+      if business_days
+        puts "No pull requests found for #{repo} in the last #{business_days} business days."
+        puts "To look further back, use: codepulse --business-days N #{repo}"
+      else
+        puts "No pull requests found for #{repo}."
+      end
+    end
 
     def output_report(metrics, excluded:, repo:, business_days:, detailed:)
       print_report_header(repo, business_days)
