@@ -41,6 +41,7 @@ Metrics/CyclomaticComplexity:
 Metrics/BlockLength:
   Exclude:
     - "lib/codepulse/cli.rb"
+    - "test/**/*"
 
 Layout/LineLength:
   Max: 140

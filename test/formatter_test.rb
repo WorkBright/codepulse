@@ -3,12 +3,12 @@
 require_relative "test_helper"
 require "stringio"
 
-class FormatterTest < Minitest::Test
-  def setup
+describe Codepulse::Formatter do
+  before do
     @formatter = Codepulse::Formatter.new
   end
 
-  def test_output_with_empty_metrics_shows_no_prs_message
+  it "shows no prs message with empty metrics" do
     output = capture_output do
       @formatter.output([], repo: "owner/repo")
     end
@@ -16,7 +16,7 @@ class FormatterTest < Minitest::Test
     assert_includes output, "No pull requests found"
   end
 
-  def test_output_includes_repo_name_in_header
+  it "includes repo name in header" do
     metrics = [sample_metric]
 
     output = capture_output do
@@ -26,7 +26,7 @@ class FormatterTest < Minitest::Test
     assert_includes output, "rails/rails"
   end
 
-  def test_output_includes_business_days_in_header
+  it "includes business days in header" do
     metrics = [sample_metric]
 
     output = capture_output do
@@ -36,7 +36,7 @@ class FormatterTest < Minitest::Test
     assert_includes output, "14 business days"
   end
 
-  def test_output_includes_summary_section
+  it "includes summary section" do
     metrics = [sample_metric]
 
     output = capture_output do
@@ -46,7 +46,7 @@ class FormatterTest < Minitest::Test
     assert_includes output, "SUMMARY"
   end
 
-  def test_output_shows_pickup_time_stats
+  it "shows pickup time stats" do
     metrics = [sample_metric(pickup_time_seconds: 3600)]
 
     output = capture_output do
@@ -56,7 +56,7 @@ class FormatterTest < Minitest::Test
     assert_includes output, "pickup time"
   end
 
-  def test_output_with_details_shows_individual_prs
+  it "shows individual prs when details enabled" do
     metrics = [sample_metric]
 
     output = capture_output do
@@ -70,19 +70,20 @@ class FormatterTest < Minitest::Test
   private
 
   def sample_metric(overrides = {})
+    base_time = Time.utc(2024, 12, 23, 12, 0, 0)
     {
       number: 123,
       title: "Fix bug in authentication",
       author: "testuser",
-      created_at: Time.now - 86_400,
-      merged_at: Time.now,
+      created_at: base_time - 86_400,
+      merged_at: base_time,
       additions: 50,
       deletions: 10,
       changed_files: 3,
       pickup_time_seconds: 7200,
       merge_time_seconds: 86_400,
       pickup_actor: "reviewer",
-      pickup_at: Time.now - 3600,
+      pickup_at: base_time - 3600,
       pickup_source: "review"
     }.merge(overrides)
   end
