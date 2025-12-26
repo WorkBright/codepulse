@@ -23,8 +23,8 @@ gem install codepulse
 ```sh
 git clone https://github.com/WorkBright/codepulse.git
 cd codepulse
-gem build codepulse.gemspec
-gem install codepulse-0.1.0.gem
+bundle install
+rake install
 ```
 
 ## Usage
@@ -108,12 +108,14 @@ codepulse rails/rails --business-days 30 --limit 50
 # Run tests
 rake test
 
-# Lint (requires: gem install rubocop)
-rubocop
+# Lint
+bundle exec rubocop
 
 # Build and install locally
-gem build codepulse.gemspec
-gem install codepulse-0.1.0.gem
+rake install
+
+# Release new version (bumps tag, pushes to git and RubyGems)
+rake release
 ```
 
 ## License
