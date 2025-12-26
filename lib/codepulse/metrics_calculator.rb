@@ -7,6 +7,7 @@ module Codepulse
 
     # Bot accounts to ignore when calculating pickup time.
     IGNORED_ACTORS = [
+      # GitHub Copilot
       "copilot-pull-request-reviewer",
       "copilot-pull-request-reviewer[bot]",
       "copilot",
@@ -14,8 +15,58 @@ module Codepulse
       "copilot-bot",
       "github-copilot",
       "github-copilot[bot]",
+
+      # GitHub Actions
       "github-actions",
-      "github-actions[bot]"
+      "github-actions[bot]",
+
+      # AI Coding Assistants
+      "cursor[bot]",
+      "cursor-bot",
+      "codex[bot]",
+      "openai-codex",
+      "coderabbitai[bot]",
+      "coderabbit",
+      "sourcery-ai[bot]",
+      "sourcery[bot]",
+      "codeium[bot]",
+      "tabnine[bot]",
+      "sweep[bot]",
+      "sweepai[bot]",
+      "qodo-merge-pro[bot]",
+      "codiumai[bot]",
+      "amazon-q[bot]",
+      "codewhisperer[bot]",
+      "aider[bot]",
+      "devin[bot]",
+      "devin-ai[bot]",
+
+      # Dependency Management
+      "dependabot[bot]",
+      "dependabot",
+      "renovate[bot]",
+      "renovate",
+
+      # Security & Code Quality
+      "snyk-bot",
+      "snyk[bot]",
+      "sonarcloud[bot]",
+      "sonarqube[bot]",
+      "codecov[bot]",
+      "codecov",
+      "coveralls[bot]",
+      "deepsource-autofix[bot]",
+      "deepsource[bot]",
+      "codefactor[bot]",
+      "lgtm-com[bot]",
+
+      # Deployment & Merge Bots
+      "vercel[bot]",
+      "netlify[bot]",
+      "mergify[bot]",
+      "kodiakhq[bot]",
+      "imgbot[bot]",
+      "allstar[bot]"
     ].freeze
 
     def initialize(client:)
