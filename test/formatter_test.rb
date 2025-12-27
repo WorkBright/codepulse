@@ -67,6 +67,38 @@ describe Codepulse::Formatter do
     assert_includes output, "#123"
   end
 
+  describe "median_value" do
+    it "returns middle value for odd count" do
+      result = @formatter.send(:median_value, [1, 2, 3])
+      assert_equal 2, result
+    end
+
+    it "returns average of two middle values for even count" do
+      result = @formatter.send(:median_value, [1, 2, 3, 4])
+      assert_equal 2.5, result
+    end
+
+    it "returns the single value for count of one" do
+      result = @formatter.send(:median_value, [42])
+      assert_equal 42, result
+    end
+
+    it "returns nil for empty array" do
+      result = @formatter.send(:median_value, [])
+      assert_nil result
+    end
+
+    it "handles larger odd arrays" do
+      result = @formatter.send(:median_value, [10, 20, 30, 40, 50])
+      assert_equal 30, result
+    end
+
+    it "handles larger even arrays" do
+      result = @formatter.send(:median_value, [10, 20, 30, 40])
+      assert_equal 25.0, result
+    end
+  end
+
   private
 
   def sample_metric(overrides = {})
