@@ -9,5 +9,5 @@ require_relative "codepulse/formatter"
 require_relative "codepulse/cli"
 
 module Codepulse
-  VERSION = "0.1.2"
+  VERSION = "0.1.3"
 end
