@@ -206,11 +206,11 @@ module Codepulse
       sorted = values.sort
       average_seconds = (values.sum / values.length.to_f).round
 
-      puts "  Average #{label.downcase}:  #{format_duration_compact(average_seconds)}"
-      puts "  Median #{label.downcase}:   #{format_duration_compact(percentile_value(sorted, 50))}"
-      puts "  p95 #{label.downcase}:      #{format_duration_compact(percentile_value(sorted, 95))}" if values.length >= MIN_FOR_P95
-      puts "  Fastest #{label.downcase}: #{format_duration_compact(sorted.first)}"
-      puts "  Slowest #{label.downcase}: #{format_duration_compact(sorted.last)}"
+      print_stat_line("Average", label, format_duration_compact(average_seconds))
+      print_stat_line("Median", label, format_duration_compact(median_value(sorted)))
+      print_stat_line("p95", label, format_duration_compact(percentile_value(sorted, 95))) if values.length >= MIN_FOR_P95
+      print_stat_line("Fastest", label, format_duration_compact(sorted.first))
+      print_stat_line("Slowest", label, format_duration_compact(sorted.last))
     end
 
     def print_number_stats(label, values)
@@ -219,11 +219,16 @@ module Codepulse
       sorted = values.sort
       average_value = (values.sum / values.length.to_f).round(1)
 
-      puts "  Average #{label.downcase}:  #{format_number_compact(average_value)}"
-      puts "  Median #{label.downcase}:   #{format_number_compact(percentile_value(sorted, 50))}"
-      puts "  p95 #{label.downcase}:      #{format_number_compact(percentile_value(sorted, 95))}" if values.length >= MIN_FOR_P95
-      puts "  Min #{label.downcase}:      #{format_number_compact(sorted.first)}"
-      puts "  Max #{label.downcase}:      #{format_number_compact(sorted.last)}"
+      print_stat_line("Average", label, format_number_compact(average_value))
+      print_stat_line("Median", label, format_number_compact(median_value(sorted)))
+      print_stat_line("p95", label, format_number_compact(percentile_value(sorted, 95))) if values.length >= MIN_FOR_P95
+      print_stat_line("Min", label, format_number_compact(sorted.first))
+      print_stat_line("Max", label, format_number_compact(sorted.last))
+    end
+
+    def print_stat_line(prefix, label, value)
+      stat_label = "#{prefix} #{label.downcase}:"
+      puts "  #{stat_label.ljust(28)} #{value}"
     end
 
     def truncate(value, length)
@@ -274,12 +279,27 @@ module Codepulse
     end
 
     # Returns the value at the given percentile from a sorted array.
-    # Uses nearest-rank method: p50 = median, p95 = 95th percentile.
+    # Uses nearest-rank method for percentiles like p95.
     def percentile_value(sorted_values, percentile)
       count = sorted_values.length
       rank = (percentile / 100.0 * count).ceil
       index = [rank - 1, count - 1].min
       sorted_values[index]
+    end
+
+    # Returns the median of a sorted array.
+    # For odd counts, returns the middle value.
+    # For even counts, returns the average of the two middle values.
+    def median_value(sorted_values)
+      count = sorted_values.length
+      return nil if count.zero?
+
+      if count.odd?
+        sorted_values[count / 2]
+      else
+        mid = count / 2
+        (sorted_values[mid - 1] + sorted_values[mid]) / 2.0
+      end
     end
 
     def format_number_compact(value)
