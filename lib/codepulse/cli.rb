@@ -122,8 +122,9 @@ module Codepulse
 
     def fetch_pull_requests(client, repo)
       limit = effective_limit
-      status "Fetching pull requests from #{repo}..."
-      client.pull_requests(repo, state: @options.fetch(:state), limit: limit)
+      business_days = @options.fetch(:business_days_back)
+      status "Fetching pull requests from #{repo} for the last #{business_days} business days..."
+      client.pull_requests_with_activity(repo, state: @options.fetch(:state), limit: limit)
     end
 
     def effective_limit
@@ -143,13 +144,12 @@ module Codepulse
       pull_requests
     end
 
-    def calculate_metrics(client, repo, pull_requests)
+    def calculate_metrics(_client, _repo, pull_requests)
       status "Calculating metrics for #{pull_requests.length} pull requests..."
-      calculator = MetricsCalculator.new(client: client)
+      calculator = MetricsCalculator.new
 
-      pull_requests.each_with_index.map do |pull_request, index|
-        status "  Analyzing PR ##{pull_request["number"]} (#{index + 1}/#{pull_requests.length})..."
-        calculator.metrics_for_pull_request(repo, pull_request)
+      pull_requests.map do |pull_request|
+        calculator.metrics_for_pull_request(pull_request)
       end
     end
 

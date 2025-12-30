@@ -69,15 +69,16 @@ module Codepulse
       "allstar[bot]"
     ].freeze
 
-    def initialize(client:)
-      @client = client
+    def initialize
+      # No client needed - data is pre-fetched via GraphQL
     end
 
     # Returns a hash of metrics for a single PR.
-    def metrics_for_pull_request(repository, pull_request)
+    # Expects pull_request to include :reviews, :review_comments, :issue_comments from GraphQL.
+    def metrics_for_pull_request(pull_request)
       created_at = parse_time(pull_request["created_at"])
       merged_at = parse_time(pull_request["merged_at"])
-      pickup_event = find_pickup_event(repository, pull_request, created_at)
+      pickup_event = find_pickup_event(pull_request, created_at)
       pickup_seconds = pickup_event ? business_seconds_between(created_at, pickup_event.fetch(:timestamp)) : nil
       merge_seconds = merged_at && created_at ? business_seconds_between(created_at, merged_at) : nil
 
@@ -101,12 +102,12 @@ module Codepulse
     private
 
     # Finds the first non-author, non-bot response (review, comment, or issue comment).
-    def find_pickup_event(repository, pull_request, created_at)
-      pull_number = pull_request["number"]
+    # Uses pre-fetched data from GraphQL query.
+    def find_pickup_event(pull_request, created_at)
       author_login = pull_request.dig("user", "login")
 
       review_event = earliest_event(
-        @client.pull_request_reviews(repository, pull_number),
+        pull_request["reviews"] || [],
         author_login: author_login,
         time_key: "submitted_at",
         actor_path: %w[user login],
@@ -114,7 +115,7 @@ module Codepulse
       )
 
       review_comment_event = earliest_event(
-        @client.pull_request_comments(repository, pull_number),
+        pull_request["review_comments"] || [],
         author_login: author_login,
         time_key: "created_at",
         actor_path: %w[user login],
@@ -122,7 +123,7 @@ module Codepulse
       )
 
       issue_comment_event = earliest_event(
-        @client.issue_comments(repository, pull_number),
+        pull_request["issue_comments"] || [],
         author_login: author_login,
         time_key: "created_at",
         actor_path: %w[user login],
